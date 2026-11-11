@@ -64,3 +64,82 @@ public class CalculadoraConversor extends JFrame implements ActionListener {
         add(lblResultado, BorderLayout.SOUTH);
     }
 }
+
+// ---------------- Construccion de la interfaz ----------------
+    // Daniela
+    private JPanel crearPanelOperaciones() {
+        JPanel panel = new JPanel(new GridLayout(3, 1, 5, 5));
+        panel.setBorder(BorderFactory.createTitledBorder("Operaciones matemáticas"));
+
+        JPanel filaCampos = new JPanel(new GridLayout(1, 4, 5, 5));
+        filaCampos.add(new JLabel("Número 1:", JLabel.RIGHT));
+        txtNumero1 = crearCampoNumerico();
+        filaCampos.add(txtNumero1);
+        filaCampos.add(new JLabel("Número 2:", JLabel.RIGHT));
+        txtNumero2 = crearCampoNumerico();
+        filaCampos.add(txtNumero2);
+
+        JPanel filaBotones = new JPanel(new GridLayout(1, 4, 5, 5));
+        btnSumar = crearBoton("Sumar");
+        btnRestar = crearBoton("Restar");
+        btnMultiplicar = crearBoton("Multiplicar");
+        btnDividir = crearBoton("Dividir");
+        filaBotones.add(btnSumar);
+        filaBotones.add(btnRestar);
+        filaBotones.add(btnMultiplicar);
+        filaBotones.add(btnDividir);
+
+        panel.add(new JLabel("Ingrese los dos números y elija la operación:", JLabel.CENTER));
+        panel.add(filaCampos);
+        panel.add(filaBotones);
+        return panel;
+    }
+
+    private JPanel crearPanelTemperatura() {
+        JPanel panel = new JPanel(new GridLayout(3, 1, 5, 5));
+        panel.setBorder(BorderFactory.createTitledBorder("Conversión de temperatura"));
+
+        JPanel filaCampo = new JPanel(new GridLayout(1, 2, 5, 5));
+        filaCampo.add(new JLabel("Temperatura (°C o °F):", JLabel.RIGHT));
+        txtTemperatura = crearCampoNumerico();
+        filaCampo.add(txtTemperatura);
+
+        JPanel filaBotones = new JPanel(new GridLayout(1, 2, 5, 5));
+        btnCelsiusAFahrenheit = crearBoton("°C a °F");
+        btnFahrenheitACelsius = crearBoton("°F a °C");
+        filaBotones.add(btnCelsiusAFahrenheit);
+        filaBotones.add(btnFahrenheitACelsius);
+
+        panel.add(new JLabel("Ingrese la temperatura que desea convertir:", JLabel.CENTER));
+        panel.add(filaCampo);
+        panel.add(filaBotones);
+        return panel;
+    }
+
+    private JPanel crearPanelMoneda() {
+        JPanel panel = new JPanel(new GridLayout(3, 1, 5, 5));
+        panel.setBorder(BorderFactory.createTitledBorder("Conversión de moneda (1 USD = $3200 COP)"));
+
+        JPanel filaCampo = new JPanel(new GridLayout(1, 2, 5, 5));
+        filaCampo.add(new JLabel("Valor (USD o COP):", JLabel.RIGHT));
+        txtMoneda = crearCampoNumerico();
+        filaCampo.add(txtMoneda);
+
+        JPanel filaBotones = new JPanel(new GridLayout(1, 2, 5, 5));
+        btnUsdACop = crearBoton("USD a COP");
+        btnCopAUsd = crearBoton("COP a USD");
+        filaBotones.add(btnUsdACop);
+        filaBotones.add(btnCopAUsd);
+
+        panel.add(new JLabel("Ingrese el valor de dinero que desea convertir:", JLabel.CENTER));
+        panel.add(filaCampo);
+        panel.add(filaBotones);
+        return panel;
+    }
+
+    private JButton crearBoton(String texto) {
+        JButton boton = new JButton(texto);
+        boton.addActionListener(this);
+        return boton;
+    }
+
