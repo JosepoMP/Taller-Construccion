@@ -63,7 +63,7 @@ public class CalculadoraConversor extends JFrame implements ActionListener {
         add(panelCentral, BorderLayout.CENTER);
         add(lblResultado, BorderLayout.SOUTH);
     }
-}
+
 
 // ---------------- Construccion de la interfaz ----------------
     // Daniela
@@ -247,3 +247,54 @@ public class CalculadoraConversor extends JFrame implements ActionListener {
             mostrarResultado("$ " + formatear(valor) + " COP = US$ " + formatear(dolares));
         }
     }
+
+    
+    // ---------------- Validaciones y utilidades ----------------
+
+    /**
+     * Lee y valida el contenido de un campo. Muestra un JOptionPane si el campo
+     * esta vacio o si no contiene un numero valido. Retorna null en caso de error.
+     */
+    
+    // Daniela 
+    private Double leerNumero(JTextField campo, String nombreCampo) {
+        String texto = campo.getText().trim();
+
+        if (texto.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                    "El campo \"" + nombreCampo + "\" no puede estar vacío.",
+                    "Campo vacío", JOptionPane.WARNING_MESSAGE);
+            campo.requestFocus();
+            return null;
+        }
+
+        if (!texto.matches(Patron_numero)) {
+            JOptionPane.showMessageDialog(this,
+                    "El campo \"" + nombreCampo + "\" solo admite números.\n"
+                            + "No se permiten letras ni caracteres especiales.\n"
+                            + "Ejemplos válidos: 25, -8, 3.75",
+                    "Dato inválido", JOptionPane.ERROR_MESSAGE);
+            campo.requestFocus();
+            campo.selectAll();
+            return null;
+        }
+
+        return Double.parseDouble(texto);
+    }
+
+    private void mostrarResultado(String texto) {
+        lblResultado.setText("Resultado: " + texto);
+    }
+
+    /** Muestra el numero sin ".0" cuando es entero y con maximo 4 decimales si no. */
+    private String formatear(double numero) {
+        if (numero == Math.rint(numero)) {
+            return String.format("%,.0f", numero);
+        }
+        return String.format("%,.4f", numero).replaceAll("0+$", "").replaceAll("[.,]$", "");
+    }
+
+    public static void main(String[] args) {
+        new CalculadoraConversor().setVisible(true);
+    }
+}
