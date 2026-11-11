@@ -143,3 +143,107 @@ public class CalculadoraConversor extends JFrame implements ActionListener {
         return boton;
     }
 
+    /**
+     * Crea un campo de texto que solo deja escribir digitos, un punto decimal
+     * y el signo menos. Cualquier letra o caracter especial se ignora.
+     */
+
+    //Jose
+    private JTextField crearCampoNumerico() { // Crea un campo de texto que solo deja escribir digitos, un punto decimal y el signo menos. Cualquier letra o caracter especial se ignora.
+        JTextField campo = new JTextField();
+        campo.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                if (!Character.isDigit(c) && c != '.' && c != '-' // Permitir solo dígitos, punto decimal y signo menos
+                        && c != KeyEvent.VK_BACK_SPACE && c != KeyEvent.VK_DELETE) { // Permitir borrar con backspace y delete
+                    e.consume(); // Ignorar el caracter si no es válido
+                }
+            }
+        });
+        return campo; 
+    }
+
+    // ---------------- Manejo de eventos ----------------
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Object origen = e.getSource();
+
+        if (origen == btnSumar || origen == btnRestar
+                || origen == btnMultiplicar || origen == btnDividir) {
+            realizarOperacion(origen);
+        } else if (origen == btnCelsiusAFahrenheit || origen == btnFahrenheitACelsius) {
+            convertirTemperatura(origen);
+        } else if (origen == btnUsdACop || origen == btnCopAUsd) {
+            convertirMoneda(origen);
+        }
+    }
+
+    private void realizarOperacion(Object origen) {
+        Double n1 = leerNumero(txtNumero1, "Número 1");
+        if (n1 == null) return;
+        Double n2 = leerNumero(txtNumero2, "Número 2");
+        if (n2 == null) return;
+
+        double resultado;
+        String operacion;
+
+        if (origen == btnSumar) {
+            resultado = n1 + n2;
+            operacion = "+";
+        } else if (origen == btnRestar) {
+            resultado = n1 - n2;
+            operacion = "-";
+        } else if (origen == btnMultiplicar) {
+            resultado = n1 * n2;
+            operacion = "x";
+        } else {
+            if (n2 == 0) {
+                JOptionPane.showMessageDialog(this,
+                        "No es posible dividir entre cero.\nIngrese un Número 2 diferente de 0.",
+                        "División por cero", JOptionPane.ERROR_MESSAGE);
+                txtNumero2.requestFocus();
+                return;
+            }
+            resultado = n1 / n2;
+            operacion = "/";
+        }
+
+        mostrarResultado(formatear(n1) + " " + operacion + " " + formatear(n2)
+                + " = " + formatear(resultado));
+    }
+
+    private void convertirTemperatura(Object origen) {
+        Double valor = leerNumero(txtTemperatura, "Temperatura");
+        if (valor == null) return;
+
+        if (origen == btnCelsiusAFahrenheit) {
+            double fahrenheit = (valor * 9 / 5) + 32;
+            mostrarResultado(formatear(valor) + " °C = " + formatear(fahrenheit) + " °F");
+        } else {
+            double celsius = (valor - 32) * 5 / 9;
+            mostrarResultado(formatear(valor) + " °F = " + formatear(celsius) + " °C");
+        }
+    }
+
+    private void convertirMoneda(Object origen) {
+        Double valor = leerNumero(txtMoneda, "Valor");
+        if (valor == null) return;
+
+        if (valor < 0) {
+            JOptionPane.showMessageDialog(this,
+                    "El valor de dinero no puede ser negativo.",
+                    "Dato inválido", JOptionPane.WARNING_MESSAGE);
+            txtMoneda.requestFocus();
+            return;
+        }
+
+        if (origen == btnUsdACop) {
+            double pesos = valor * Tasa_dolar;
+            mostrarResultado("US$ " + formatear(valor) + " = $ " + formatear(pesos) + " COP");
+        } else {
+            double dolares = valor / Tasa_dolar;
+            mostrarResultado("$ " + formatear(valor) + " COP = US$ " + formatear(dolares));
+        }
+    }
